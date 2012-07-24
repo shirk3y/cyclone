@@ -88,6 +88,7 @@ class HTTPClient(object):
             self.url,
             request_headers,
             self.body_producer)
+        response.__dict__['url'] = self.url
 
         mr = self.maxRedirects
         while mr >= 1:
@@ -100,11 +101,13 @@ class HTTPClient(object):
                         location = location[0]
 
                     #print("redirecting to:", location)
+                    
                     response = yield agent.request(
                         "GET",  # self.method,
                         location,
                         request_headers,
                         self.body_producer)
+                    response.__dict__['url'] = location
                 else:
                     break
             else:
